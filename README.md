@@ -1,6 +1,6 @@
 # World.NET - A C# wrapper for WORLD vocoder
 
-The library targets **.NET Framework 4.7**, although the code can be recompiled for lower framework versions with an explicit reference to System.ValueTuple assembly.
+The binary distributions provided at [release](../../releases) page targets **.NET Framework 4.7**, although the source code can be recompiled for lower framework versions with an explicit reference to System.ValueTuple assembly.
 
 Please refer to [the original repo in C](//github.com/mmorise/World) by [mmorise](//github.com/mmorise) for a detailed description of the WORLD vocoder.
 
