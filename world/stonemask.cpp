@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Copyright 2012 Masanori Morise
-// Author: mmorise [at] yamanashi.ac.jp (Masanori Morise)
-// Last update: 2017/02/01
+// Author: mmorise [at] meiji.ac.jp (Masanori Morise)
+// Last update: 2021/02/15
 //
 // F0 estimation based on instantaneous frequency.
 // This method is carried out by using the output of Dio().
@@ -99,7 +99,8 @@ static double FixF0(const double *power_spectrum, const double *numerator_i,
   double *instantaneous_frequency_list = new double[number_of_harmonics];
   int index;
   for (int i = 0; i < number_of_harmonics; ++i) {
-    index = matlab_round(initial_f0 * fft_size / fs * (i + 1));
+    index = MyMinInt(matlab_round(initial_f0 * fft_size / fs * (i + 1)), 
+            fft_size / 2);
     instantaneous_frequency_list[i] = power_spectrum[index] == 0.0 ? 0.0 :
       static_cast<double>(index) * fs / fft_size +
       numerator_i[index] / power_spectrum[index] * fs / 2.0 / world::kPi;
@@ -199,7 +200,7 @@ static double GetRefinedF0(const double *x, int x_length, int fs,
       half_window_length * 2 + 1);
 
   // If amount of correction is overlarge (20 %), initial F0 is employed.
-  if (fabs(mean_f0 - initial_f0) / initial_f0 > 0.2) mean_f0 = initial_f0;
+  if (fabs(mean_f0 - initial_f0) > initial_f0 * 0.2) mean_f0 = initial_f0;
 
   delete[] base_time;
 
