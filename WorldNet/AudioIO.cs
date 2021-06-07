@@ -6,14 +6,14 @@ namespace World
 {
     public static class AudioIO
     {
-        [DllImport(@"WORLD.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int GetAudioLength([In] string filename);
+        [DllImport(@"WORLD.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        static extern int GetAudioLength([In] string filename);
 
-        [DllImport(@"WORLD.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wavread")]
+        [DllImport(@"WORLD.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wavread", CharSet = CharSet.Ansi)]
         static extern void WavRead([In] string filename,
             [Out] out int fs, [Out] out int nbit, [Out] double[] x);
 
-        [DllImport(@"WORLD.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wavwrite")]
+        [DllImport(@"WORLD.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "wavwrite", CharSet = CharSet.Ansi)]
         static extern void WavWrite([In] double[] x, int x_length, int fs, int nbit,
             [In] string filename);
 
