@@ -16,12 +16,12 @@ namespace Tests
             var (f0, t) = Dio.Compute(x, fs);
             f0 = StoneMask.Compute(x, fs, t, f0);
             var fftSize = CheapTrick.GetFftSize(fs);
-            var spfull = CheapTrick.Compute(x, fs, t, f0, fftSize: fftSize);
-            var apfull = D4C.Compute(x, fs, t, f0, fftSize: fftSize);
+            var sp = CheapTrick.Compute(x, fs, t, f0, fftSize: fftSize);
+            var ap = D4C.Compute(x, fs, t, f0, fftSize: fftSize);
 
             var ndim = 60;
-            var sp = Codec.CodeSpectralEnvelope(spfull, fs, ndim);
-            var ap = Codec.CodeAperiodicity(apfull, fs);
+            var mgc = Codec.CodeSpectralEnvelope(sp, fs, ndim);
+            var bap = Codec.CodeAperiodicity(ap, fs);
 
             Console.WriteLine($"{audioPath}:");
             Console.WriteLine($"    input samples count: {x.Length}");
@@ -30,10 +30,10 @@ namespace Tests
             Console.WriteLine();
             Console.WriteLine($"    frame count: {f0.Length}");
             Console.WriteLine($"    fft size: {fftSize}");
-            Console.WriteLine($"    spectrum width: {spfull.GetLength(1)}");
+            Console.WriteLine($"    sp width: {sp.GetLength(1)}");
             Console.WriteLine();
-            Console.WriteLine($"    mfcc width: {ndim}");
-            Console.WriteLine($"    ap width: {ap.GetLength(1)}");
+            Console.WriteLine($"    mgc width: {ndim}");
+            Console.WriteLine($"    bap width: {bap.GetLength(1)}");
             Console.WriteLine();
 
             for (int i = 0; i < f0.Length; i++)
@@ -41,9 +41,9 @@ namespace Tests
                 f0[i] *= 1.6789;
             }
 
-            spfull = Codec.DecodeSpectralEnvelope(sp, fs, fftSize);
-            apfull = Codec.DecodeAperiodicity(ap, fs, fftSize);
-            var y = Synthesis.Compute(f0, spfull, apfull, fs);
+            sp = Codec.DecodeSpectralEnvelope(mgc, fs, fftSize);
+            ap = Codec.DecodeAperiodicity(bap, fs, fftSize);
+            var y = Synthesis.Compute(f0, sp, ap, fs);
 
             Console.WriteLine($"--> {audioOutPath}");
             AudioIO.WavWrite(y, fs, nbit, audioOutPath);
