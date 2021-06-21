@@ -32,8 +32,8 @@ namespace World
 
             var bap = new double[ap.GetLength(0), numCodedAp];
             Util.AsRowPointers(ap, apFramePtrs =>
-            Util.AsRowPointers(bap, codedApFramePtrs =>
-                CodeAperiodicity(apFramePtrs, ap.GetLength(0), fs, fftSize, codedApFramePtrs)));
+            Util.AsRowPointers(bap, bapFramePtrs =>
+                CodeAperiodicity(apFramePtrs, ap.GetLength(0), fs, fftSize, bapFramePtrs)));
 
             return bap;
         }
@@ -41,9 +41,9 @@ namespace World
         public static double[,] DecodeAperiodicity(double[,] bap, int fs, int fftSize)
         {
             var ap = new double[bap.GetLength(0), fftSize / 2 + 1];
-            Util.AsRowPointers(bap, codedApFramePtrs =>
+            Util.AsRowPointers(bap, bapFramePtrs =>
             Util.AsRowPointers(ap, apFramePtrs =>
-                DecodeAperiodicity(codedApFramePtrs, bap.GetLength(0), fs, fftSize, apFramePtrs)));
+                DecodeAperiodicity(bapFramePtrs, bap.GetLength(0), fs, fftSize, apFramePtrs)));
 
             return ap;
         }
@@ -54,8 +54,8 @@ namespace World
 
             var mgc = new double[sp.GetLength(0), numDimensions];
             Util.AsRowPointers(sp, spFramePtrs =>
-            Util.AsRowPointers(mgc, codedSpFramePtrs =>
-                CodeSpectralEnvelope(spFramePtrs, sp.GetLength(0), fs, fftSize, numDimensions, codedSpFramePtrs)));
+            Util.AsRowPointers(mgc, mgcFramePtrs =>
+                CodeSpectralEnvelope(spFramePtrs, sp.GetLength(0), fs, fftSize, numDimensions, mgcFramePtrs)));
 
             return mgc;
         }
@@ -63,9 +63,9 @@ namespace World
         public static double[,] DecodeSpectralEnvelope(double[,] mgc, int fs, int fftSize)
         {
             var sp = new double[mgc.GetLength(0), fftSize / 2 + 1];
-            Util.AsRowPointers(mgc, codedSpFramePtrs =>
+            Util.AsRowPointers(mgc, mgcFramePtrs =>
             Util.AsRowPointers(sp, spFramePtrs =>
-                DecodeSpectralEnvelope(codedSpFramePtrs, mgc.GetLength(0), fs, fftSize, mgc.GetLength(1), spFramePtrs)));
+                DecodeSpectralEnvelope(mgcFramePtrs, mgc.GetLength(0), fs, fftSize, mgc.GetLength(1), spFramePtrs)));
 
             return sp;
         }
