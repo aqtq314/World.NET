@@ -30,20 +30,20 @@ namespace World
             var fftSize = (ap.GetLength(1) - 1) * 2;
             var numCodedAp = GetNumberOfAperiodicities(fs);
 
-            var codedAp = new double[ap.GetLength(0), numCodedAp];
+            var bap = new double[ap.GetLength(0), numCodedAp];
             Util.AsRowPointers(ap, apFramePtrs =>
-            Util.AsRowPointers(codedAp, codedApFramePtrs =>
+            Util.AsRowPointers(bap, codedApFramePtrs =>
                 CodeAperiodicity(apFramePtrs, ap.GetLength(0), fs, fftSize, codedApFramePtrs)));
 
-            return codedAp;
+            return bap;
         }
 
-        public static double[,] DecodeAperiodicity(double[,] codedAp, int fs, int fftSize)
+        public static double[,] DecodeAperiodicity(double[,] bap, int fs, int fftSize)
         {
-            var ap = new double[codedAp.GetLength(0), fftSize / 2 + 1];
-            Util.AsRowPointers(codedAp, codedApFramePtrs =>
+            var ap = new double[bap.GetLength(0), fftSize / 2 + 1];
+            Util.AsRowPointers(bap, codedApFramePtrs =>
             Util.AsRowPointers(ap, apFramePtrs =>
-                DecodeAperiodicity(codedApFramePtrs, codedAp.GetLength(0), fs, fftSize, apFramePtrs)));
+                DecodeAperiodicity(codedApFramePtrs, bap.GetLength(0), fs, fftSize, apFramePtrs)));
 
             return ap;
         }
@@ -52,20 +52,20 @@ namespace World
         {
             var fftSize = (sp.GetLength(1) - 1) * 2;
 
-            var codedSp = new double[sp.GetLength(0), numDimensions];
+            var mgc = new double[sp.GetLength(0), numDimensions];
             Util.AsRowPointers(sp, spFramePtrs =>
-            Util.AsRowPointers(codedSp, codedSpFramePtrs =>
+            Util.AsRowPointers(mgc, codedSpFramePtrs =>
                 CodeSpectralEnvelope(spFramePtrs, sp.GetLength(0), fs, fftSize, numDimensions, codedSpFramePtrs)));
 
-            return codedSp;
+            return mgc;
         }
 
-        public static double[,] DecodeSpectralEnvelope(double[,] codedSp, int fs, int fftSize)
+        public static double[,] DecodeSpectralEnvelope(double[,] mgc, int fs, int fftSize)
         {
-            var sp = new double[codedSp.GetLength(0), fftSize / 2 + 1];
-            Util.AsRowPointers(codedSp, codedSpFramePtrs =>
+            var sp = new double[mgc.GetLength(0), fftSize / 2 + 1];
+            Util.AsRowPointers(mgc, codedSpFramePtrs =>
             Util.AsRowPointers(sp, spFramePtrs =>
-                DecodeSpectralEnvelope(codedSpFramePtrs, codedSp.GetLength(0), fs, fftSize, codedSp.GetLength(1), spFramePtrs)));
+                DecodeSpectralEnvelope(codedSpFramePtrs, mgc.GetLength(0), fs, fftSize, mgc.GetLength(1), spFramePtrs)));
 
             return sp;
         }
